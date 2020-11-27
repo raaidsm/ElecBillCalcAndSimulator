@@ -70,7 +70,7 @@ class Simulation {
     vector<TOUCustomer> touCustomerVector;
     vector<TIERCustomer> tierCustomerVector;
 
-    void generateCustomers() {
+    static void generateCustomers() {
         //TODO: 1) Randomly generate 1000 TOUCustomers and 1000 TIERCustomers.
         //Generate 1000 TOUCustomers
         for (int i = 0; i < 1000; i++) {
