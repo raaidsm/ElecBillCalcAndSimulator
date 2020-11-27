@@ -26,10 +26,9 @@ public:
         totalKwhUsed = 0;
         balance = 0;
     }
-    Customer(int newMeterNumber, int newTotalKwhUsed, double newBalance) {
+    Customer(int newMeterNumber, int newTotalKwhUsed) : Customer() {
         meterNumber = newMeterNumber;
         totalKwhUsed = newTotalKwhUsed;
-        balance = newBalance;
     }
     virtual ~Customer() = default;
 
@@ -48,8 +47,8 @@ public:
 class TOUCustomer : public Customer {
 public:
     TOUCustomer() = default;
-    TOUCustomer(int newMeterNumber, int newTotalKwhUsed, double newBalance) : Customer(
-            newMeterNumber, newTotalKwhUsed, newBalance) {}
+    TOUCustomer(int newMeterNumber, int newTotalKwhUsed) : Customer(
+            newMeterNumber, newTotalKwhUsed) {}
 
     void computeBalance() final {}
 };
@@ -57,8 +56,8 @@ public:
 class TIERCustomer : public Customer {
 public:
     TIERCustomer() = default;
-    TIERCustomer(int newMeterNumber, int newTotalKwhUsed, double newBalance) : Customer(
-            newMeterNumber, newTotalKwhUsed, newBalance) {}
+    TIERCustomer(int newMeterNumber, int newTotalKwhUsed) : Customer(
+            newMeterNumber, newTotalKwhUsed) {}
 
     void computeBalance() final {}
 };
