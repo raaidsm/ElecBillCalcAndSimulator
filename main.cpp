@@ -103,6 +103,7 @@ class Simulation {
             customer->computeBalance();
 
             touCustomerVector.push_back(*customer);
+            delete customer;
         }
         //Generate 1000 TIERCustomers
         for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
@@ -116,6 +117,7 @@ class Simulation {
             customer->computeBalance();
 
             tierCustomerVector.push_back(*customer);
+            delete customer;
         }
     }
 
