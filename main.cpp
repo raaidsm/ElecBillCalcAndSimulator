@@ -94,7 +94,7 @@ class Simulation {
             int meterNumber = STARTING_METER_NUMBER + i;
             double totalKwhUsed;
 
-            TOUCustomer* customer = new TOUCustomer(meterNumber);
+            auto* customer = new TOUCustomer(meterNumber);
             generateReadings(engine, customer, totalKwhUsed);
 
             customer->setTotalKwhUsed(totalKwhUsed);
@@ -107,7 +107,7 @@ class Simulation {
             int meterNumber = STARTING_METER_NUMBER + NUM_CUSTOMERS_SIMULATED + i;
             double totalKwhUsed;
 
-            TIERCustomer* customer = new TIERCustomer(meterNumber);
+            auto* customer = new TIERCustomer(meterNumber);
             generateReadings(engine, customer, totalKwhUsed);
 
             customer->setTotalKwhUsed(totalKwhUsed);
