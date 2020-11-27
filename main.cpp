@@ -2,16 +2,27 @@
 #include <list>
 #include <vector>
 #include <random>
+#include <chrono>
+
+#define NUM_CUSTOMERS_SIMULATED 1000
+#define NUM_DAYS_SIMULATED 30
+#define READINGS_PER_DAY 24
+#define STARTING_METER_NUMBER 111111
 
 using namespace std;
 
 class Reading {
 private:
     double meterReading;
-    unsigned char time;
+    unsigned char day;
+    unsigned char hour;
 
 public:
-    Reading(double meterReading, unsigned char time) : meterReading(meterReading), time(time) {}
+    Reading(double newMeterReading, unsigned char newDay, unsigned char newHour) {
+        meterReading = newMeterReading;
+        day = newDay;
+        hour = newHour;
+    }
     ~Reading() = default;
 };
 
@@ -28,14 +39,19 @@ public:
         totalKwhUsed = 0;
         balance = 0;
     }
-    Customer(int newMeterNumber, double newTotalKwhUsed) : Customer() {
+    explicit Customer(int newMeterNumber) : Customer() {
         meterNumber = newMeterNumber;
-        totalKwhUsed = newTotalKwhUsed;
     }
     virtual ~Customer() = default;
 
     void addReading(Reading reading) {
         readings.push_back(reading);
+    }
+    void setTotalKwhUsed(double newTotalKwhUsed) {
+        totalKwhUsed = newTotalKwhUsed;
+    }
+    [[nodiscard]] double getTotalKwhUsed() const {
+        return totalKwhUsed;
     }
     void setBalance(double newBalance) {
         balance = newBalance;
@@ -49,8 +65,8 @@ public:
 class TOUCustomer final : public Customer {
 public:
     TOUCustomer() = default;
-    TOUCustomer(int newMeterNumber, double newTotalKwhUsed) : Customer(
-            newMeterNumber, newTotalKwhUsed) {}
+    explicit TOUCustomer(int newMeterNumber) : Customer(
+            newMeterNumber) {}
     ~TOUCustomer() final = default;
 
     void computeBalance() final {}
@@ -59,8 +75,8 @@ public:
 class TIERCustomer final : public Customer {
 public:
     TIERCustomer() = default;
-    TIERCustomer(int newMeterNumber, double newTotalKwhUsed) : Customer(
-            newMeterNumber, newTotalKwhUsed) {}
+    explicit TIERCustomer(int newMeterNumber) : Customer(
+            newMeterNumber) {}
     ~TIERCustomer() final = default;
 
     void computeBalance() final {}
@@ -70,25 +86,54 @@ class Simulation {
     vector<TOUCustomer> touCustomerVector;
     vector<TIERCustomer> tierCustomerVector;
 
-    static void generateCustomers() {
-        //TODO: 1) Randomly generate 1000 TOUCustomers and 1000 TIERCustomers.
+    void generateCustomers() {
+        default_random_engine engine = generateRandomEngine();
+
         //Generate 1000 TOUCustomers
-        for (int i = 0; i < 1000; i++) {
-            //
+        for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
+            int meterNumber = STARTING_METER_NUMBER + i;
+            double totalKwhUsed;
+
+            TOUCustomer* customer = new TOUCustomer(meterNumber);
+            generateReadings(engine, customer, totalKwhUsed);
+
+            customer->setTotalKwhUsed(totalKwhUsed);
+            customer->computeBalance();
+
+            touCustomerVector.push_back(*customer);
         }
         //Generate 1000 TIERCustomers
-        for (int i = 0; i < 1000; i++) {
-            //
+        for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
+            int meterNumber = STARTING_METER_NUMBER + NUM_CUSTOMERS_SIMULATED + i;
+            double totalKwhUsed;
+
+            TIERCustomer* customer = new TIERCustomer(meterNumber);
+            generateReadings(engine, customer, totalKwhUsed);
+
+            customer->setTotalKwhUsed(totalKwhUsed);
+            customer->computeBalance();
+
+            tierCustomerVector.push_back(*customer);
         }
-        //TODO: 2) Randomly generate meter readings for each hour.
-        //TODO: 2.1) Meter readings should be between 0.05 and 2.00 kWh.
-        //TODO: 3) Generate meter readings for 30 days.
     }
+
 public:
     Simulation() {
         generateCustomers();
     }
 
+    static default_random_engine generateRandomEngine() {
+        unsigned int seed = chrono::steady_clock::now().time_since_epoch().count();
+        default_random_engine engine(seed);
+        return engine;
+    }
+    static void generateReadings(default_random_engine engine, Customer* customer, double& totalKwhUsed) {
+        //For each day
+        for (int i = 1; i <= NUM_DAYS_SIMULATED; i++) {
+            //For each hour
+            for (int j = 1; j < READINGS_PER_DAY; j++) {}
+        }
+    }
     void printResult() {}
 };
 
