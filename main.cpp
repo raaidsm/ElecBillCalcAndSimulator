@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <vector>
 
 using namespace std;
 
@@ -62,8 +63,20 @@ public:
     void computeBalance() final {}
 };
 
+class Simulation {
+    //TODO: Randomly generate 1000 TOUCustomers and 1000 TIERCustomers.
+    //TODO: Randomly generate meter readings for each hour.
+        //TODO: Meter readings should be between 0.05 and 2.00 kWh.
+    //TODO: Generate meter readings for 30 days.
+    vector<TOUCustomer> touCustomerVector;
+    vector<TIERCustomer> tierCustomerVector;
+public:
+    void printResult() {}
+};
+
 int main() {
-    Customer* cust = new TOUCustomer;
-    cust->computeBalance();
+    auto* sim = new Simulation();
+    sim->printResult();
+    delete sim;
     return 0;
 }
