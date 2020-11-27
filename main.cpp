@@ -8,6 +8,8 @@
 #define NUM_DAYS_SIMULATED 30
 #define READINGS_PER_DAY 24
 #define STARTING_METER_NUMBER 111111
+#define MIN_READING_INT 5
+#define MAX_READING_INT 200
 
 using namespace std;
 
@@ -128,10 +130,17 @@ public:
         return engine;
     }
     static void generateReadings(default_random_engine engine, Customer* customer, double& totalKwhUsed) {
+        uniform_int_distribution<int> distribution(MIN_READING_INT, MAX_READING_INT);
         //For each day
         for (int i = 1; i <= NUM_DAYS_SIMULATED; i++) {
             //For each hour
-            for (int j = 1; j < READINGS_PER_DAY; j++) {}
+            for (int j = 1; j < READINGS_PER_DAY; j++) {
+                double meterReading = distribution(engine);
+                meterReading /= 100;
+                customer->addReading(Reading(meterReading, i, j));
+
+                totalKwhUsed += meterReading;
+            }
         }
     }
     void printResult() {}
