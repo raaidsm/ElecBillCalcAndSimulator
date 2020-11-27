@@ -14,13 +14,13 @@
 using namespace std;
 
 class Reading {
-private:
     double meterReading;
     unsigned char day;
     unsigned char hour;
+    unsigned char priceCategory;
 
 public:
-    Reading(double newMeterReading, unsigned char newDay, unsigned char newHour) {
+    Reading(double newMeterReading, unsigned char newDay, unsigned char newHour) : priceCategory(0) {
         meterReading = newMeterReading;
         day = newDay;
         hour = newHour;
@@ -35,6 +35,8 @@ protected:
     double totalKwhUsed;
     double balance;
 
+    virtual void determineCategories() = 0;
+
 public:
     Customer() {
         meterNumber = 0;
@@ -46,9 +48,6 @@ public:
     }
     virtual ~Customer() = default;
 
-    void addReading(Reading reading) {
-        readings.push_back(reading);
-    }
     void setTotalKwhUsed(double newTotalKwhUsed) {
         totalKwhUsed = newTotalKwhUsed;
     }
@@ -60,6 +59,10 @@ public:
     }
     [[nodiscard]] double getBalance() const {
         return balance;
+    }
+
+    void addReading(Reading reading) {
+        readings.push_back(reading);
     }
     virtual void computeBalance() = 0;
 };
@@ -75,12 +78,19 @@ class TOUCustomer final : public Customer {
         onPeakPrice = 217;
     }
 
+    void determineCategories() final {
+        /*Go through every reading and mark the price category*/
+        for (auto it = readings.begin(); it != readings.end(); it++) {}
+    }
+
 public:
     TOUCustomer() { init(); }
     explicit TOUCustomer(int newMeterNumber) : Customer(newMeterNumber) { init(); }
     ~TOUCustomer() final = default;
 
-    void computeBalance() final {}
+    void computeBalance() final {
+        determineCategories();
+    }
 };
 
 class TIERCustomer final : public Customer {
@@ -90,6 +100,11 @@ class TIERCustomer final : public Customer {
     void init() {
         tier1Price = 126;
         tier2Price = 146;
+    }
+
+    void determineCategories() final {
+        /*Go through every reading and mark the price category*/
+        for (auto it = readings.begin(); it != readings.end(); it++) {}
     }
 
 public:
@@ -136,10 +151,6 @@ class Simulation {
     }
 
 public:
-    Simulation() {
-        generateCustomers();
-    }
-
     static default_random_engine generateRandomEngine() {
         unsigned int seed = chrono::steady_clock::now().time_since_epoch().count();
         default_random_engine engine(seed);
@@ -159,6 +170,11 @@ public:
             }
         }
     }
+
+    Simulation() {
+        generateCustomers();
+    }
+
     void printResult() {}
 };
 
