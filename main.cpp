@@ -65,20 +65,36 @@ public:
 };
 
 class TOUCustomer final : public Customer {
+    //These values are in cents multiplied by 10 to be represented as integral types
+    unsigned char offPeakPrice;
+    unsigned char midPeakPrice;
+    unsigned char onPeakPrice;
+    void init() {
+        offPeakPrice = 105;
+        midPeakPrice = 150;
+        onPeakPrice = 217;
+    }
+
 public:
-    TOUCustomer() = default;
-    explicit TOUCustomer(int newMeterNumber) : Customer(
-            newMeterNumber) {}
+    TOUCustomer() { init(); }
+    explicit TOUCustomer(int newMeterNumber) : Customer(newMeterNumber) { init(); }
     ~TOUCustomer() final = default;
 
     void computeBalance() final {}
 };
 
 class TIERCustomer final : public Customer {
+    //These values are in cents multiplied by 10 to be represented as integral types
+    unsigned char tier1Price;
+    unsigned char tier2Price;
+    void init() {
+        tier1Price = 126;
+        tier2Price = 146;
+    }
+
 public:
-    TIERCustomer() = default;
-    explicit TIERCustomer(int newMeterNumber) : Customer(
-            newMeterNumber) {}
+    TIERCustomer() { init(); }
+    explicit TIERCustomer(int newMeterNumber) : Customer(newMeterNumber) { init(); }
     ~TIERCustomer() final = default;
 
     void computeBalance() final {}
@@ -93,10 +109,9 @@ class Simulation {
 
         //Generate 1000 TOUCustomers
         for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
-            int meterNumber = STARTING_METER_NUMBER + i;
             double totalKwhUsed;
 
-            auto* customer = new TOUCustomer(meterNumber);
+            auto* customer = new TOUCustomer(STARTING_METER_NUMBER + i);
             generateReadings(engine, customer, totalKwhUsed);
 
             customer->setTotalKwhUsed(totalKwhUsed);
@@ -107,10 +122,9 @@ class Simulation {
         }
         //Generate 1000 TIERCustomers
         for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
-            int meterNumber = STARTING_METER_NUMBER + NUM_CUSTOMERS_SIMULATED + i;
             double totalKwhUsed;
 
-            auto* customer = new TIERCustomer(meterNumber);
+            auto* customer = new TIERCustomer(STARTING_METER_NUMBER + NUM_CUSTOMERS_SIMULATED + i);
             generateReadings(engine, customer, totalKwhUsed);
 
             customer->setTotalKwhUsed(totalKwhUsed);
