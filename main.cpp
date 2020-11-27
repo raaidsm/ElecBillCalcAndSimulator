@@ -1,22 +1,23 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <random>
 
 using namespace std;
 
 class Reading {
 private:
-    double meterNumber;
+    double meterReading;
     unsigned char time;
 
 public:
-    Reading(double meterNumber, unsigned char time) : meterNumber(meterNumber), time(time) {}
+    Reading(double meterReading, unsigned char time) : meterReading(meterReading), time(time) {}
     ~Reading() = default;
 };
 
 class Customer {
 protected:
-    double meterNumber;
+    int meterNumber;
     list<Reading> readings;
     double totalKwhUsed;
     double balance;
@@ -27,7 +28,7 @@ public:
         totalKwhUsed = 0;
         balance = 0;
     }
-    Customer(double newMeterNumber, double newTotalKwhUsed) : Customer() {
+    Customer(int newMeterNumber, double newTotalKwhUsed) : Customer() {
         meterNumber = newMeterNumber;
         totalKwhUsed = newTotalKwhUsed;
     }
@@ -45,32 +46,49 @@ public:
     virtual void computeBalance() = 0;
 };
 
-class TOUCustomer : public Customer {
+class TOUCustomer final : public Customer {
 public:
     TOUCustomer() = default;
-    TOUCustomer(double newMeterNumber, double newTotalKwhUsed) : Customer(
+    TOUCustomer(int newMeterNumber, double newTotalKwhUsed) : Customer(
             newMeterNumber, newTotalKwhUsed) {}
+    ~TOUCustomer() final = default;
 
     void computeBalance() final {}
 };
 
-class TIERCustomer : public Customer {
+class TIERCustomer final : public Customer {
 public:
     TIERCustomer() = default;
-    TIERCustomer(double newMeterNumber, double newTotalKwhUsed) : Customer(
+    TIERCustomer(int newMeterNumber, double newTotalKwhUsed) : Customer(
             newMeterNumber, newTotalKwhUsed) {}
+    ~TIERCustomer() final = default;
 
     void computeBalance() final {}
 };
 
 class Simulation {
-    //TODO: Randomly generate 1000 TOUCustomers and 1000 TIERCustomers.
-    //TODO: Randomly generate meter readings for each hour.
-        //TODO: Meter readings should be between 0.05 and 2.00 kWh.
-    //TODO: Generate meter readings for 30 days.
     vector<TOUCustomer> touCustomerVector;
     vector<TIERCustomer> tierCustomerVector;
+
+    void generateCustomers() {
+        //TODO: 1) Randomly generate 1000 TOUCustomers and 1000 TIERCustomers.
+        //Generate 1000 TOUCustomers
+        for (int i = 0; i < 1000; i++) {
+            //
+        }
+        //Generate 1000 TIERCustomers
+        for (int i = 0; i < 1000; i++) {
+            //
+        }
+        //TODO: 2) Randomly generate meter readings for each hour.
+        //TODO: 2.1) Meter readings should be between 0.05 and 2.00 kWh.
+        //TODO: 3) Generate meter readings for 30 days.
+    }
 public:
+    Simulation() {
+        generateCustomers();
+    }
+
     void printResult() {}
 };
 
