@@ -6,19 +6,19 @@ using namespace std;
 
 class Reading {
 private:
-    int meterNumber;
+    double meterNumber;
     unsigned char time;
 
 public:
-    Reading(int meterNumber, unsigned char time) : meterNumber(meterNumber), time(time) {}
+    Reading(double meterNumber, unsigned char time) : meterNumber(meterNumber), time(time) {}
     ~Reading() = default;
 };
 
 class Customer {
 protected:
-    int meterNumber;
+    double meterNumber;
     list<Reading> readings;
-    int totalKwhUsed;
+    double totalKwhUsed;
     double balance;
 
 public:
@@ -27,7 +27,7 @@ public:
         totalKwhUsed = 0;
         balance = 0;
     }
-    Customer(int newMeterNumber, int newTotalKwhUsed) : Customer() {
+    Customer(double newMeterNumber, double newTotalKwhUsed) : Customer() {
         meterNumber = newMeterNumber;
         totalKwhUsed = newTotalKwhUsed;
     }
@@ -48,7 +48,7 @@ public:
 class TOUCustomer : public Customer {
 public:
     TOUCustomer() = default;
-    TOUCustomer(int newMeterNumber, int newTotalKwhUsed) : Customer(
+    TOUCustomer(double newMeterNumber, double newTotalKwhUsed) : Customer(
             newMeterNumber, newTotalKwhUsed) {}
 
     void computeBalance() final {}
@@ -57,7 +57,7 @@ public:
 class TIERCustomer : public Customer {
 public:
     TIERCustomer() = default;
-    TIERCustomer(int newMeterNumber, int newTotalKwhUsed) : Customer(
+    TIERCustomer(double newMeterNumber, double newTotalKwhUsed) : Customer(
             newMeterNumber, newTotalKwhUsed) {}
 
     void computeBalance() final {}
