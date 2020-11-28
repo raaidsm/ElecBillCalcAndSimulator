@@ -10,11 +10,13 @@
 #define STARTING_METER_NUMBER 111111
 #define MIN_READING_INT 5
 #define MAX_READING_INT 200
+#define TIER2_THRESHOLD 1000
 
 using namespace std;
 
 class Reading {
     double meterReading;
+    //For this assignment, the chosen 30-day period is considered to be November 1st to November 30th (inclusive)
     unsigned char day;
     unsigned char hour;
     unsigned char priceCategory;
@@ -26,6 +28,16 @@ public:
         hour = newHour;
     }
     ~Reading() = default;
+
+    [[nodiscard]] double getMeterReading() const {
+        return meterReading;
+    }
+    [[nodiscard]] unsigned char getDay() const {
+        return day;
+    }
+    [[nodiscard]] unsigned char getHour() const {
+        return hour;
+    }
 };
 
 class Customer {
@@ -34,8 +46,6 @@ protected:
     list<Reading> readings;
     double totalKwhUsed;
     double balance;
-
-    virtual void determineCategories() = 0;
 
 public:
     Customer() {
@@ -55,10 +65,12 @@ public:
         return totalKwhUsed;
     }
     void setBalance(double newBalance) {
-        balance = newBalance;
+        //Inputted value is in cents*10, so divide by 1000 to get the dollar amount
+        balance = newBalance / 1000;
     }
     [[nodiscard]] double getBalance() const {
-        return balance;
+        //Outputted value is used in cents*10 format, so return balance*1000
+        return balance * 1000;
     }
 
     void addReading(Reading reading) {
@@ -78,18 +90,29 @@ class TOUCustomer final : public Customer {
         onPeakPrice = 217;
     }
 
-    void determineCategories() final {
-        /*Go through every reading and mark the price category*/
-        for (auto it = readings.begin(); it != readings.end(); it++) {}
-    }
-
 public:
     TOUCustomer() { init(); }
     explicit TOUCustomer(int newMeterNumber) : Customer(newMeterNumber) { init(); }
     ~TOUCustomer() final = default;
 
     void computeBalance() final {
-        determineCategories();
+        for (auto reading = readings.begin(); reading != readings.end(); reading++) {
+            unsigned char dayModSeven = reading->getDay() % 7;
+            unsigned char hour = reading->getHour();
+
+            //If off-peak
+            if (dayModSeven == 0  ||  dayModSeven == 1  ||  (1 <= hour && hour <= 7)  ||  (20 <= hour && hour <= 24)) {
+                setBalance(getBalance() + reading->getMeterReading() * offPeakPrice);
+            }
+            //If mid-peak
+            else if (12 <= hour && hour < 17) {
+                setBalance(getBalance() + reading->getMeterReading() * midPeakPrice);
+            }
+            //If on-peak
+            else {
+                setBalance(getBalance() + reading->getMeterReading() * onPeakPrice);
+            }
+        }
     }
 };
 
@@ -102,22 +125,37 @@ class TIERCustomer final : public Customer {
         tier2Price = 146;
     }
 
-    void determineCategories() final {
-        /*Go through every reading and mark the price category*/
-        for (auto it = readings.begin(); it != readings.end(); it++) {}
-    }
-
 public:
     TIERCustomer() { init(); }
     explicit TIERCustomer(int newMeterNumber) : Customer(newMeterNumber) { init(); }
     ~TIERCustomer() final = default;
 
-    void computeBalance() final {}
+    void computeBalance() final {
+        double kwhSpent = 0;
+
+        for (auto reading = readings.begin(); reading != readings.end(); reading++) {
+            kwhSpent += reading->getMeterReading();
+        }
+
+        if (TIER2_THRESHOLD < kwhSpent) {
+            double kwhSpentInTier2 = kwhSpent - TIER2_THRESHOLD;
+            setBalance(getBalance() + TIER2_THRESHOLD * tier1Price + kwhSpentInTier2 * tier2Price);
+        }
+        else setBalance(getBalance() + kwhSpent * tier1Price);
+    }
 };
 
 class Simulation {
     vector<TOUCustomer> touCustomerVector;
     vector<TIERCustomer> tierCustomerVector;
+    double totalKwhUsedTOU;
+    double totalBalanceTOU;
+    double maxBalanceTOU;
+    double minBalanceTOU;
+    double totalKwhUsedTIER;
+    double totalBalanceTIER;
+    double maxBalanceTIER;
+    double minBalanceTIER;
 
     void generateCustomers() {
         default_random_engine engine = generateRandomEngine();
@@ -149,6 +187,32 @@ class Simulation {
             delete customer;
         }
     }
+    void analyzeCustomers() {
+        //TOUCustomers
+        for (auto customer = touCustomerVector.begin(); customer != touCustomerVector.end(); customer++) {
+            totalKwhUsedTOU += customer->getTotalKwhUsed();
+            totalBalanceTOU += customer->getBalance();
+
+            if (maxBalanceTOU == 0.0 || maxBalanceTOU < customer->getBalance()) {
+                maxBalanceTOU = customer->getBalance();
+            }
+            if (minBalanceTOU == 0.0 || customer->getBalance() < minBalanceTOU) {
+                minBalanceTOU = customer->getBalance();
+            }
+        }
+        //TIERCustomers
+        for (auto customer = tierCustomerVector.begin(); customer != tierCustomerVector.end(); customer++) {
+            totalKwhUsedTIER += customer->getTotalKwhUsed();
+            totalBalanceTIER += customer->getBalance();
+
+            if (maxBalanceTIER == 0.0 || maxBalanceTIER < customer->getBalance()) {
+                maxBalanceTIER = customer->getBalance();
+            }
+            if (minBalanceTIER == 0.0 || customer->getBalance() < minBalanceTIER) {
+                minBalanceTIER = customer->getBalance();
+            }
+        }
+    }
 
 public:
     static default_random_engine generateRandomEngine() {
@@ -171,8 +235,9 @@ public:
         }
     }
 
-    Simulation() {
+    Simulation() : maxBalanceTOU(0.0), minBalanceTOU(0.0), maxBalanceTIER(0.0), minBalanceTIER(0.0) {
         generateCustomers();
+        analyzeCustomers();
     }
 
     void printResult() {}
