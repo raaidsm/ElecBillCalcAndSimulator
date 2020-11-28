@@ -19,10 +19,9 @@ class Reading {
     //For this assignment, the chosen 30-day period is considered to be November 1st to November 30th (inclusive)
     unsigned char day;
     unsigned char hour;
-    unsigned char priceCategory;
 
 public:
-    Reading(double newMeterReading, unsigned char newDay, unsigned char newHour) : priceCategory(0) {
+    Reading(double newMeterReading, unsigned char newDay, unsigned char newHour) {
         meterReading = newMeterReading;
         day = newDay;
         hour = newHour;
@@ -160,7 +159,7 @@ class Simulation {
     void generateCustomers() {
         default_random_engine engine = generateRandomEngine();
 
-        //Generate 1000 TOUCustomers
+        //Generate NUM_CUSTOMERS_SIMULATED TOUCustomers
         for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
             double totalKwhUsed;
 
@@ -173,7 +172,7 @@ class Simulation {
             touCustomerVector.push_back(*customer);
             delete customer;
         }
-        //Generate 1000 TIERCustomers
+        //Generate NUM_CUSTOMERS_SIMULATED TIERCustomers
         for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
             double totalKwhUsed;
 
@@ -191,25 +190,25 @@ class Simulation {
         //TOUCustomers
         for (auto customer = touCustomerVector.begin(); customer != touCustomerVector.end(); customer++) {
             totalKwhUsedTOU += customer->getTotalKwhUsed();
-            totalBalanceTOU += customer->getBalance();
+            totalBalanceTOU += customer->getBalance() / 1000;
 
-            if (maxBalanceTOU == 0.0 || maxBalanceTOU < customer->getBalance()) {
-                maxBalanceTOU = customer->getBalance();
+            if (maxBalanceTOU == 0.0 || maxBalanceTOU < customer->getBalance() / 1000) {
+                maxBalanceTOU = customer->getBalance() / 1000;
             }
-            if (minBalanceTOU == 0.0 || customer->getBalance() < minBalanceTOU) {
-                minBalanceTOU = customer->getBalance();
+            if (minBalanceTOU == 0.0 || customer->getBalance() < minBalanceTOU / 1000) {
+                minBalanceTOU = customer->getBalance() / 1000;
             }
         }
         //TIERCustomers
         for (auto customer = tierCustomerVector.begin(); customer != tierCustomerVector.end(); customer++) {
             totalKwhUsedTIER += customer->getTotalKwhUsed();
-            totalBalanceTIER += customer->getBalance();
+            totalBalanceTIER += customer->getBalance() / 1000;
 
-            if (maxBalanceTIER == 0.0 || maxBalanceTIER < customer->getBalance()) {
-                maxBalanceTIER = customer->getBalance();
+            if (maxBalanceTIER == 0.0 || maxBalanceTIER < customer->getBalance() / 1000) {
+                maxBalanceTIER = customer->getBalance() / 1000;
             }
-            if (minBalanceTIER == 0.0 || customer->getBalance() < minBalanceTIER) {
-                minBalanceTIER = customer->getBalance();
+            if (minBalanceTIER == 0.0 || customer->getBalance() / 1000 < minBalanceTIER) {
+                minBalanceTIER = customer->getBalance() / 1000;
             }
         }
     }
@@ -220,12 +219,12 @@ public:
         default_random_engine engine(seed);
         return engine;
     }
-    static void generateReadings(default_random_engine engine, Customer* customer, double& totalKwhUsed) {
+    static void generateReadings(default_random_engine& engine, Customer* customer, double& totalKwhUsed) {
         uniform_int_distribution<int> distribution(MIN_READING_INT, MAX_READING_INT);
         //For each day
         for (int i = 1; i <= NUM_DAYS_SIMULATED; i++) {
             //For each hour
-            for (int j = 1; j < READINGS_PER_DAY; j++) {
+            for (int j = 1; j <= READINGS_PER_DAY; j++) {
                 double meterReading = distribution(engine);
                 meterReading /= 100;
                 customer->addReading(Reading(meterReading, i, j));
