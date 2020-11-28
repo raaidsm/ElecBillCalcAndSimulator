@@ -5,7 +5,7 @@
 #include <chrono>
 #include <iomanip>
 
-#define NUM_CUSTOMERS_SIMULATED 5
+#define NUM_CUSTOMERS_SIMULATED 1000
 #define NUM_DAYS_SIMULATED 30
 #define READINGS_PER_DAY 24
 #define STARTING_METER_NUMBER 111111
@@ -102,7 +102,7 @@ public:
             unsigned char hour = reading->getHour();
 
             //If off-peak
-            if (dayModSeven == 0  ||  dayModSeven == 1  ||  (1 <= hour && hour <= 7)  ||  (20 <= hour && hour <= 24)) {
+            if (dayModSeven == 6  ||  dayModSeven == 0  ||  (1 <= hour && hour <= 7)  ||  (20 <= hour && hour <= 24)) {
                 setBalance(getBalance() + reading->getMeterReading() * offPeakPrice);
             }
             //If mid-peak
