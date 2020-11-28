@@ -248,7 +248,24 @@ public:
         analyzeCustomers();
     }
 
-    void printResult() {}
+    void printResult() const {
+        cout << "Simulation run:" << endl;
+        cout << "   Number of customers in each group: " << NUM_CUSTOMERS_SIMULATED << endl;
+
+        cout << "TOU Customers:" << endl;
+        cout << "   Average electric consumption: " << "$" << totalKwhUsedTOU / NUM_CUSTOMERS_SIMULATED <<
+        " kWh" << endl;
+        cout << "   Average balance/per customer: " << "$" << totalBalanceTOU / NUM_CUSTOMERS_SIMULATED << endl;
+        cout << "   Largest balance: " << "$" << maxBalanceTOU << endl;
+        cout << "   Smallest balance: " << "$" << minBalanceTOU << endl;
+
+        cout << "TIER Customers:" << endl;
+        cout << "   Average electric consumption: " << "$" << totalKwhUsedTIER / NUM_CUSTOMERS_SIMULATED <<
+        " kWh" << endl;
+        cout << "   Average balance/per customer: " << "$" << totalBalanceTIER / NUM_CUSTOMERS_SIMULATED << endl;
+        cout << "   Largest balance: " << "$" << maxBalanceTIER << endl;
+        cout << "   Smallest balance: " << "$" << minBalanceTIER << endl;
+    }
 };
 
 int main() {
