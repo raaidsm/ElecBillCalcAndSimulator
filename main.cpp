@@ -3,6 +3,7 @@
 #include <vector>
 #include <random>
 #include <chrono>
+#include <iomanip>
 
 #define NUM_CUSTOMERS_SIMULATED 5
 #define NUM_DAYS_SIMULATED 30
@@ -249,22 +250,25 @@ public:
     }
 
     void printResult() const {
+        cout << setprecision(2) << fixed;
         cout << "Simulation run:" << endl;
-        cout << "   Number of customers in each group: " << NUM_CUSTOMERS_SIMULATED << endl;
+        cout << "   Number of customers in each group: " << setw(7) << NUM_CUSTOMERS_SIMULATED << endl;
 
         cout << "TOU Customers:" << endl;
-        cout << "   Average electric consumption: " << "$" << totalKwhUsedTOU / NUM_CUSTOMERS_SIMULATED <<
-        " kWh" << endl;
-        cout << "   Average balance/per customer: " << "$" << totalBalanceTOU / NUM_CUSTOMERS_SIMULATED << endl;
-        cout << "   Largest balance: " << "$" << maxBalanceTOU << endl;
-        cout << "   Smallest balance: " << "$" << minBalanceTOU << endl;
+        cout << "   Average electric consumption: " << setw(18) <<
+        totalKwhUsedTOU / NUM_CUSTOMERS_SIMULATED << " kWh" << endl;
+        cout << "   Average balance/per customer: " << setw(12) <<
+        "$" << totalBalanceTOU / NUM_CUSTOMERS_SIMULATED << endl;
+        cout << "   Largest balance: " << setw(25) << "$" << maxBalanceTOU << endl;
+        cout << "   Smallest balance: " << setw(24) << "$" << minBalanceTOU << endl;
 
         cout << "TIER Customers:" << endl;
-        cout << "   Average electric consumption: " << "$" << totalKwhUsedTIER / NUM_CUSTOMERS_SIMULATED <<
-        " kWh" << endl;
-        cout << "   Average balance/per customer: " << "$" << totalBalanceTIER / NUM_CUSTOMERS_SIMULATED << endl;
-        cout << "   Largest balance: " << "$" << maxBalanceTIER << endl;
-        cout << "   Smallest balance: " << "$" << minBalanceTIER << endl;
+        cout << "   Average electric consumption: " << setw(18) <<
+        totalKwhUsedTIER / NUM_CUSTOMERS_SIMULATED << " kWh" << endl;
+        cout << "   Average balance/per customer: " << setw(12) <<
+        "$" << totalBalanceTIER / NUM_CUSTOMERS_SIMULATED << endl;
+        cout << "   Largest balance: " << setw(25) << "$" << maxBalanceTIER << endl;
+        cout << "   Smallest balance: " << setw(24) << "$" << minBalanceTIER << endl;
     }
 };
 
