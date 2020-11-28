@@ -4,7 +4,7 @@
 #include <random>
 #include <chrono>
 
-#define NUM_CUSTOMERS_SIMULATED 1000
+#define NUM_CUSTOMERS_SIMULATED 5
 #define NUM_DAYS_SIMULATED 30
 #define READINGS_PER_DAY 24
 #define STARTING_METER_NUMBER 111111
