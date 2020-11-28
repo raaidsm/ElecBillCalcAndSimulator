@@ -11,6 +11,7 @@
 #define STARTING_METER_NUMBER 111111
 #define MIN_READING_INT 5
 #define MAX_READING_INT 200
+#define CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE 1000
 #define TIER2_THRESHOLD 1000
 
 using namespace std;
@@ -66,11 +67,11 @@ public:
     }
     void setBalance(double newBalance) {
         //Inputted value is in cents*10, so divide by 1000 to get the dollar amount
-        balance = newBalance / 1000;
+        balance = newBalance / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
     }
     [[nodiscard]] double getBalance() const {
         //Outputted value is used in cents*10 format, so return balance*1000
-        return balance * 1000;
+        return balance * CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
     }
 
     void addReading(Reading reading) {
@@ -191,26 +192,34 @@ class Simulation {
     void analyzeCustomers() {
         //TOUCustomers
         for (auto customer = touCustomerVector.begin(); customer != touCustomerVector.end(); customer++) {
+            //TODO: DEBUGGING:
+            cout << "This customer's total kWh use is: " << customer->getTotalKwhUsed() << endl;
             totalKwhUsedTOU += customer->getTotalKwhUsed();
-            totalBalanceTOU += customer->getBalance() / 1000;
+            totalBalanceTOU += customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
 
-            if (maxBalanceTOU == 0.0 || maxBalanceTOU < customer->getBalance() / 1000) {
-                maxBalanceTOU = customer->getBalance() / 1000;
+            if (maxBalanceTOU == 0.0 ||
+            maxBalanceTOU < customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE) {
+                maxBalanceTOU = customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
             }
-            if (minBalanceTOU == 0.0 || customer->getBalance() < minBalanceTOU / 1000) {
-                minBalanceTOU = customer->getBalance() / 1000;
+            if (minBalanceTOU == 0.0 ||
+            customer->getBalance() < minBalanceTOU / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE) {
+                minBalanceTOU = customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
             }
         }
         //TIERCustomers
         for (auto customer = tierCustomerVector.begin(); customer != tierCustomerVector.end(); customer++) {
+            //TODO: DEBUGGING:
+            cout << "This customer's total kWh use is: " << customer->getTotalKwhUsed() << endl;
             totalKwhUsedTIER += customer->getTotalKwhUsed();
-            totalBalanceTIER += customer->getBalance() / 1000;
+            totalBalanceTIER += customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
 
-            if (maxBalanceTIER == 0.0 || maxBalanceTIER < customer->getBalance() / 1000) {
-                maxBalanceTIER = customer->getBalance() / 1000;
+            if (maxBalanceTIER == 0.0 ||
+            maxBalanceTIER < customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE) {
+                maxBalanceTIER = customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
             }
-            if (minBalanceTIER == 0.0 || customer->getBalance() / 1000 < minBalanceTIER) {
-                minBalanceTIER = customer->getBalance() / 1000;
+            if (minBalanceTIER == 0.0 ||
+            customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE < minBalanceTIER) {
+                minBalanceTIER = customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
             }
         }
     }
