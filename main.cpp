@@ -83,15 +83,16 @@ class TOUCustomer final : public Customer {
     unsigned char offPeakPrice;
     unsigned char midPeakPrice;
     unsigned char onPeakPrice;
-    void init() {
-        offPeakPrice = 105;
-        midPeakPrice = 150;
-        onPeakPrice = 217;
-    }
 
 public:
-    TOUCustomer() { init(); }
-    explicit TOUCustomer(int newMeterNumber) : Customer(newMeterNumber) { init(); }
+    TOUCustomer() {
+        offPeakPrice = 105;
+        midPeakPrice = 150;
+        onPeakPrice = 217;}
+    explicit TOUCustomer(int newMeterNumber) : Customer(newMeterNumber) {
+        offPeakPrice = 105;
+        midPeakPrice = 150;
+        onPeakPrice = 217;}
     ~TOUCustomer() final = default;
 
     void computeBalance() final {
@@ -119,14 +120,14 @@ class TIERCustomer final : public Customer {
     //These values are in cents multiplied by 10 to be represented as integral types
     unsigned char tier1Price;
     unsigned char tier2Price;
-    void init() {
-        tier1Price = 126;
-        tier2Price = 146;
-    }
 
 public:
-    TIERCustomer() { init(); }
-    explicit TIERCustomer(int newMeterNumber) : Customer(newMeterNumber) { init(); }
+    TIERCustomer() {
+        tier1Price = 126;
+        tier2Price = 146;}
+    explicit TIERCustomer(int newMeterNumber) : Customer(newMeterNumber) {
+        tier1Price = 126;
+        tier2Price = 146;}
     ~TIERCustomer() final = default;
 
     void computeBalance() final {
