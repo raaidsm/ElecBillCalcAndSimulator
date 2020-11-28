@@ -235,7 +235,15 @@ public:
         }
     }
 
-    Simulation() : maxBalanceTOU(0.0), minBalanceTOU(0.0), maxBalanceTIER(0.0), minBalanceTIER(0.0) {
+    Simulation() {
+        totalKwhUsedTOU = 0.0;
+        totalBalanceTOU = 0.0;
+        maxBalanceTOU = 0.0;
+        minBalanceTOU = 0.0;
+        totalKwhUsedTIER = 0.0;
+        totalBalanceTIER = 0.0;
+        maxBalanceTIER = 0.0;
+        minBalanceTIER = 0.0;
         generateCustomers();
         analyzeCustomers();
     }
