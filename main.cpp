@@ -5,7 +5,7 @@
 #include <chrono>
 #include <iomanip>
 
-#define NUM_CUSTOMERS_SIMULATED 5
+#define NUM_CUSTOMERS_SIMULATED 1000
 #define NUM_DAYS_SIMULATED 30
 #define READINGS_PER_DAY 24
 #define STARTING_METER_NUMBER 111111
@@ -164,7 +164,7 @@ class Simulation {
 
         //Generate NUM_CUSTOMERS_SIMULATED TOUCustomers
         for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
-            double totalKwhUsed;
+            double totalKwhUsed = 0.0;
 
             auto* customer = new TOUCustomer(STARTING_METER_NUMBER + i);
             generateReadings(engine, customer, totalKwhUsed);
@@ -177,7 +177,7 @@ class Simulation {
         }
         //Generate NUM_CUSTOMERS_SIMULATED TIERCustomers
         for (int i = 0; i < NUM_CUSTOMERS_SIMULATED; i++) {
-            double totalKwhUsed;
+            double totalKwhUsed = 0.0;
 
             auto* customer = new TIERCustomer(STARTING_METER_NUMBER + NUM_CUSTOMERS_SIMULATED + i);
             generateReadings(engine, customer, totalKwhUsed);
