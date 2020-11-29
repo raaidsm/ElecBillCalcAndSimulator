@@ -264,7 +264,7 @@ public:
         cout << "   Number of customers in each group: " << setw(10) << NUM_CUSTOMERS_SIMULATED << endl;
 
         cout << "TOU Customers:" << endl;
-        cout << "   Average electric consumption: " << setw(20) <<
+        cout << "   Average electric consumption: " << setw(17) <<
         totalKwhUsedTOU / NUM_CUSTOMERS_SIMULATED << " kWh" << endl;
         cout << "   Average balance/per customer: " << setw(12) <<
         "$" << totalBalanceTOU / NUM_CUSTOMERS_SIMULATED << endl;
@@ -272,7 +272,7 @@ public:
         cout << "   Smallest balance: " << setw(24) << "$" << minBalanceTOU << endl;
 
         cout << "TIER Customers:" << endl;
-        cout << "   Average electric consumption: " << setw(20) <<
+        cout << "   Average electric consumption: " << setw(17) <<
         totalKwhUsedTIER / NUM_CUSTOMERS_SIMULATED << " kWh" << endl;
         cout << "   Average balance/per customer: " << setw(12) <<
         "$" << totalBalanceTIER / NUM_CUSTOMERS_SIMULATED << endl;
