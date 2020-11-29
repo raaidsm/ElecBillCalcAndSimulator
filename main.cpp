@@ -126,10 +126,12 @@ class TIERCustomer final : public Customer {
 public:
     TIERCustomer() {
         tier1Price = 126;
-        tier2Price = 146;}
+        tier2Price = 146;
+    }
     explicit TIERCustomer(int newMeterNumber) : Customer(newMeterNumber) {
         tier1Price = 126;
-        tier2Price = 146;}
+        tier2Price = 146;
+    }
     ~TIERCustomer() final = default;
 
     void computeBalance() final {
@@ -192,8 +194,6 @@ class Simulation {
     void analyzeCustomers() {
         //TOUCustomers
         for (auto customer = touCustomerVector.begin(); customer != touCustomerVector.end(); customer++) {
-            //TODO: DEBUGGING:
-            cout << "This customer's total kWh use is: " << customer->getTotalKwhUsed() << endl;
             totalKwhUsedTOU += customer->getTotalKwhUsed();
             totalBalanceTOU += customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
 
@@ -208,8 +208,6 @@ class Simulation {
         }
         //TIERCustomers
         for (auto customer = tierCustomerVector.begin(); customer != tierCustomerVector.end(); customer++) {
-            //TODO: DEBUGGING:
-            cout << "This customer's total kWh use is: " << customer->getTotalKwhUsed() << endl;
             totalKwhUsedTIER += customer->getTotalKwhUsed();
             totalBalanceTIER += customer->getBalance() / CENT_MUL_TEN_TO_DOLLAR_CONVERSION_RATE;
 
